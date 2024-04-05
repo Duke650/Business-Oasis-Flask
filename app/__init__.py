@@ -1,6 +1,5 @@
 from flask import Flask
 from config import Config
-from flask_login import LoginManager
 from app.models import db, User
 from flask_migrate import Migrate
 from flask_moment import Moment
@@ -11,9 +10,6 @@ app = Flask(__name__)
 app.config.from_object(Config)
 CORS(app)
 
-login_manager = LoginManager()
-
-login_manager.init_app(app)
 db.init_app(app)
 migrate = Migrate(app, db)
 moment = Moment(app)
@@ -21,11 +17,10 @@ moment = Moment(app)
 
 
 from app.blueprints.auth import auth
+from app.blueprints.reviews import reviews
+from app.blueprints.jobLocation import jobLocation
 
 
 app.register_blueprint(auth)
-
-
-@login_manager.user_loader
-def loadUser(userID):
-    return User.query.get(userID)
+app.register_blueprint(reviews)
+app.register_blueprint(jobLocation)
