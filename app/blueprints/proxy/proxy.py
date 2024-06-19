@@ -19,6 +19,8 @@
 #         return jsonify(response.json())
 #     except requests.exceptions.RequestException as e:
 #         return jsonify({"error": str(e)}), 500
+
+
 # app/blueprints/proxy.py
 
 from flask import Blueprint, request, jsonify
@@ -36,7 +38,10 @@ def proxy():
 
     try:
         # Append the Google Maps API key to the target URL
-        full_url = f"{target_url}&key={google_maps_api_key}"
+        if '?' in target_url:
+            full_url = f"{target_url}&key={google_maps_api_key}"
+        else:
+            full_url = f"{target_url}?key={google_maps_api_key}"
 
         # Make a GET request to the Google Maps API
         response = requests.get(full_url)
@@ -47,5 +52,6 @@ def proxy():
 
     except requests.exceptions.RequestException as e:
         return jsonify({"error": str(e)}), 500
+
 
 
